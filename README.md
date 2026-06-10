@@ -9,23 +9,39 @@
 This repository contains MATLAB implementations for the course project on ML-based beam selection enhancement for 5G NR mmWave systems. The project reproduces the MathWorks Neural Network for Beam Selection benchmark and proposes three novel architectures to improve Top-K beam selection accuracy.
 
 ## Repository Structure
-├── NeuralNetworkBeamSelectionExample.m   # Baseline benchmark (MathWorks)
-├── Method1_AttentionNN.m                 # Novel Method 1: Attention-Weighted NN
-├── Method2_DualOutputNN.m               # Novel Method 2: Dual-Output NN
-├── Method3_EnsembleRF_NN.m             # Novel Method 3: RF + NN Ensemble
-├── h38901Channel.m                      # Helper: TR 38.901 channel model
-├── h38901Scenario.m                     # Helper: scenario configuration
-├── hGenData38901Channel.m               # Helper: data generation
-├── hGetBeamSweepAngles.m               # Helper: beam sweep angles
-├── hPhasedToNRArray.m                   # Helper: antenna array conversion
-├── hSSBurstRSRP.m                       # Helper: SSB burst RSRP
-├── hSSBurstStartSymbols.m              # Helper: SSB burst timing
-├── hSSBurstTimingOffset.m              # Helper: SSB timing offset
-├──README.md
-├── baseline_topK_accuracy.png
-├── method2_topK_accuracy.png
-├── method3_topK_accuracy.png
-└── baseline_histogram.png
+├─ NeuralNetworkBeamSelectionExample.m   # Baseline benchmark (MathWorks)
+
+├─ Method1_AttentionNN.m                 # Novel Method 1: Attention-Weighted NN
+
+├─ Method2_DualOutputNN.m               # Novel Method 2: Dual-Output NN
+
+├─ Method3_EnsembleRF_NN.m             # Novel Method 3: RF + NN Ensemble
+
+├─ h38901Channel.m                      # Helper: TR 38.901 channel model
+
+├─ h38901Scenario.m                     # Helper: scenario configuration
+
+├─ hGenData38901Channel.m               # Helper: data generation
+
+├─ hGetBeamSweepAngles.m               # Helper: beam sweep angles
+
+├─ hPhasedToNRArray.m                   # Helper: antenna array conversion
+
+├─ hSSBurstRSRP.m                       # Helper: SSB burst RSRP
+
+├─ hSSBurstStartSymbols.m              # Helper: SSB burst timing
+
+├─ hSSBurstTimingOffset.m              # Helper: SSB timing offset
+
+├─ README.md
+
+├─ baseline_topK_accuracy.png
+
+├─ method2_topK_accuracy.png
+
+├─ method3_topK_accuracy.png
+
+└─ baseline_histogram.png
 
 ## Dependencies
 
