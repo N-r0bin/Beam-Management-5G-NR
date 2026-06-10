@@ -12,7 +12,7 @@
 %
 % Everything else identical to baseline for fair comparison.
 
-%% ─ 1. LOAD DATA (identical to baseline) ────────────────────────────────
+%% ── 1. LOAD DATA (identical to baseline) ────────────────────────────────
 filenameParam     = "nnBS_prm.mat";
 filenameTrainData = "nnBS_TrainingData.mat";
 filenameTestData  = "nnBS_TestData.mat";
@@ -21,7 +21,7 @@ load(filenameParam);
 load(filenameTrainData);
 load(filenameTestData);
 
-%% ─ 2. PROCESS DATA (identical to baseline) ─────────────────────────────
+%% ── 2. PROCESS DATA (identical to baseline) ─────────────────────────────
 optBeamPairIdxScalarTrain = processData(prm, rsrpMatTrain);
 optBeamPairIdxScalarTest  = processData(prm, rsrpMatTest);
 
@@ -37,7 +37,7 @@ rsrpMatVal           = rsrpMatTrain(:,:,1:valDataLen);
 rsrpMatTrainMinusVal = rsrpMatTrain(:,:,valDataLen+1:end);
 trainLocs            = locationMatTrain(valDataLen+1:end, :);
 
-%% ─ 3. NORMALISE → RESHAPE → DOWNSAMPLE (identical to baseline) ─────────
+%% ── 3. NORMALISE → RESHAPE → DOWNSAMPLE (identical to baseline) ─────────
 numBeamPairs    = prm.NumRxBeams * prm.NumTxBeams;   % 70
 numSampledBeams = 14;
 downsampleStep  = round(numBeamPairs / numSampledBeams);
@@ -64,7 +64,7 @@ rsrpTestInput = rsrpTestVec(1:downsampleStep:end, :);
 testLocs    = dataTest.PosUE;
 testDataLen = size(rsrpMatTestNorm, 3);
 
-%% ─ 4. BUILD ATTENTION NN ARCHITECTURE ───────────────────────────────────
+%% ── 4. BUILD ATTENTION NN ARCHITECTURE ───────────────────────────────────
 % How the attention mechanism works:
 %   - A small FC layer takes the 14 inputs and outputs 14 attention scores
 %   - Softmax normalizes scores into weights that sum to 1
@@ -92,7 +92,7 @@ mainLayers = dlnetwork([...
 
 disp("Attention NN architecture built successfully.")
 
-%% ─ 5. CUSTOM TRAINING LOOP ──────────────────────────────────────────────
+%% ── 5. CUSTOM TRAINING LOOP ──────────────────────────────────────────────
 % We use a manual training loop because the attention mechanism requires
 % a custom forward pass: attention weights × inputs → main network
 
@@ -185,7 +185,7 @@ mainLayers      = bestMainNet;
 save("method1_attentionNN.mat", "attentionLayers", "mainLayers", "bestValLoss")
 disp("Attention NN model saved.")
 
-%% ─ 6. EVALUATE: TOP-K ACCURACY ─────────────────────────────────────────
+%% ── 6. EVALUATE: TOP-K ACCURACY ─────────────────────────────────────────
 rng(111)
 statisticCount = accumarray(optBeamPairIdxScalarTrain, 1, [numBeamPairs, 1]);
 
@@ -228,7 +228,7 @@ fprintf("Top-5  Accuracy: %.4f%%\n", accAttn(5))
 fprintf("Top-10 Accuracy: %.4f%%\n", accAttn(10))
 fprintf("Top-18 Accuracy: %.4f%%\n", accAttn(18))
 
-%% ─ 7. EVALUATE: AVERAGE RSRP ───────────────────────────────────────────
+%% ── 7. EVALUATE: AVERAGE RSRP ───────────────────────────────────────────
 rng(111)
 rsrpAttn    = zeros(1,K);
 rsrpOptimal = zeros(1,K);
@@ -256,7 +256,7 @@ fprintf("Avg RSRP Attn    K=5:  %.4f dBm\n", rsrpAttn(5))
 fprintf("Avg RSRP Attn    K=10: %.4f dBm\n", rsrpAttn(10))
 fprintf("Avg RSRP Optimal K=1:  %.4f dBm\n", rsrpOptimal(1))
 
-%% ─ 8. COMPARISON PLOTS ─────────────────────────────────────────────────
+%% ── 8. COMPARISON PLOTS ─────────────────────────────────────────────────
 if exist("accNeural","var") && exist("rsrpNeural","var")
 
     % Top-K Accuracy
