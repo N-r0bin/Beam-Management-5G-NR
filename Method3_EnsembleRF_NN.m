@@ -14,7 +14,7 @@
 % Supported by: Chatzoglou & Goudos (Sensors, 2023) - ensemble learning
 % outperforms individual models for 5G beam selection.
 
-%% ─ 1. LOAD DATA (identical to baseline) ────────────────────────────────
+%% ── 1. LOAD DATA (identical to baseline) ────────────────────────────────
 filenameParam     = "nnBS_prm.mat";
 filenameTrainData = "nnBS_TrainingData.mat";
 filenameTestData  = "nnBS_TestData.mat";
@@ -23,7 +23,7 @@ load(filenameParam);
 load(filenameTrainData);
 load(filenameTestData);
 
-%% ─ 2. PROCESS DATA (identical to baseline) ─────────────────────────────
+%% ── 2. PROCESS DATA (identical to baseline) ─────────────────────────────
 optBeamPairIdxScalarTrain = processData(prm, rsrpMatTrain);
 optBeamPairIdxScalarTest  = processData(prm, rsrpMatTest);
 
@@ -43,7 +43,7 @@ trainLocs            = locationMatTrain(valDataLen+1:end, :);
 optBeamTrain = optBeamPairIdxScalarTrain(shuffledIdx);
 optBeamTrainLabels = optBeamTrain(valDataLen+1:end);  % for RF training
 
-%% ─ 3. NORMALISE → RESHAPE → DOWNSAMPLE (identical to baseline) ─────────
+%% ── 3. NORMALISE → RESHAPE → DOWNSAMPLE (identical to baseline) ─────────
 numBeamPairs    = prm.NumRxBeams * prm.NumTxBeams;   % 70
 numSampledBeams = 14;
 downsampleStep  = round(numBeamPairs / numSampledBeams);
@@ -70,7 +70,7 @@ rsrpTestInput = rsrpTestVec(1:downsampleStep:end, :);
 testLocs    = dataTest.PosUE;
 testDataLen = size(rsrpMatTestNorm, 3);
 
-%% ─ 4. TRAIN RANDOM FOREST CLASSIFIER ───────────────────────────────────
+%% ── 4. TRAIN RANDOM FOREST CLASSIFIER ───────────────────────────────────
 % Random Forest treats beam selection as multi-class classification
 % Input:  14 RSRP values
 % Output: predicted best beam index (1 to 70)
@@ -101,7 +101,7 @@ fprintf("RF Out-of-Bag Classification Error: %.4f\n", oobErr(end))
 save("method3_rfModel.mat", "rfModel")
 disp("Random Forest model saved.")
 
-%% ─ 5. LOAD OR TRAIN CLASSIFICATION NN ───────────────────────────────────
+%% ── 5. LOAD OR TRAIN CLASSIFICATION NN ───────────────────────────────────
 % Load Method 2's dual-output network if available
 % Otherwise train a fresh classification NN
 
@@ -179,7 +179,7 @@ else
     disp("Classification NN trained and saved.")
 end
 
-%% ─ 6. GET PREDICTIONS FROM BOTH MODELS ─────────────────────────────────
+%% ── 6. GET PREDICTIONS FROM BOTH MODELS ─────────────────────────────────
 disp("Getting predictions from both models...")
 
 % --- Classification NN predictions ---
@@ -204,7 +204,7 @@ ensembleProbs = 0.5 * predCLSnorm + 0.5 * rfProbs;   % equal weight
 
 disp("Ensemble predictions computed.")
 
-%% ─ 7. EVALUATE: TOP-K ACCURACY ─────────────────────────────────────────
+%% ── 7. EVALUATE: TOP-K ACCURACY ─────────────────────────────────────────
 rng(111)
 K          = numBeamPairs;
 accEns     = zeros(1,K);
@@ -253,7 +253,7 @@ for k = [1 3 5 10 18]
         k, accEns(k), accNN(k), accRF(k), accNeural(k))
 end
 
-%% ─ 8. EVALUATE: AVERAGE RSRP ───────────────────────────────────────────
+%% ── 8. EVALUATE: AVERAGE RSRP ───────────────────────────────────────────
 rng(111)
 rsrpEns     = zeros(1,K);
 rsrpRF      = zeros(1,K);
@@ -286,7 +286,7 @@ fprintf("Avg RSRP Ensemble K=10: %.4f dBm\n", rsrpEns(10))
 fprintf("Avg RSRP RF only  K=1:  %.4f dBm\n", rsrpRF(1))
 fprintf("Avg RSRP Optimal  K=1:  %.4f dBm\n", rsrpOptimal(1))
 
-%% ─ 9. COMPARISON PLOTS ─────────────────────────────────────────────────
+%% ── 9. COMPARISON PLOTS ─────────────────────────────────────────────────
 if exist("accNeural","var") && exist("rsrpNeural","var")
 
     % Top-K Accuracy — all methods
