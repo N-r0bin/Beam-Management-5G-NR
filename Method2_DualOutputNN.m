@@ -11,9 +11,9 @@
 %
 % Architecture:
 %   14 RSRP inputs
-%   → Shared layers: FC(64)-ReLU → FC(128)-ReLU → FC(256)-ReLU
-%   → Head 1: FC(128)-ReLU → FC(70)-tanh    [regression output]
-%   → Head 2: FC(128)-ReLU → FC(70)-softmax  [classification output]
+%   - Shared layers: FC(64)-ReLU -> FC(128)-ReLU -> FC(256)-ReLU
+%   - Head 1: FC(128)-ReLU -> FC(70)-tanh    [regression output]
+%   - Head 2: FC(128)-ReLU -> FC(70)-softmax  [classification output]
 
 %% ── 1. LOAD DATA (identical to baseline) ────────────────────────────────
 filenameParam     = "nnBS_prm.mat";
@@ -128,7 +128,7 @@ dualNet = dlnetwork(lgraph);
 disp("Dual-Output NN architecture built successfully.")
 
 %% ── 5. CUSTOM TRAINING LOOP ──────────────────────────────────────────────
-% alpha controls balance between regression and classification loss
+% alpha controls the balance between regression and classification loss
 % alpha = 0.5 means equal weight to both losses
 alpha = 0.5;
 
