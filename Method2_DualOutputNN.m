@@ -15,7 +15,7 @@
 %   - Head 1: FC(128)-ReLU -> FC(70)-tanh    [regression output]
 %   - Head 2: FC(128)-ReLU -> FC(70)-softmax  [classification output]
 
-%% ── 1. LOAD DATA (identical to baseline) ────────────────────────────────
+%% ─ 1. LOAD DATA (identical to baseline) ────────────────────────────────
 filenameParam     = "nnBS_prm.mat";
 filenameTrainData = "nnBS_TrainingData.mat";
 filenameTestData  = "nnBS_TestData.mat";
@@ -24,7 +24,7 @@ load(filenameParam);
 load(filenameTrainData);
 load(filenameTestData);
 
-%% ── 2. PROCESS DATA (identical to baseline) ─────────────────────────────
+%% ─ 2. PROCESS DATA (identical to baseline) ─────────────────────────────
 optBeamPairIdxScalarTrain = processData(prm, rsrpMatTrain);
 optBeamPairIdxScalarTest  = processData(prm, rsrpMatTest);
 
@@ -46,7 +46,7 @@ optBeamTrain = optBeamTrain(valDataLen+1:end);   % training labels
 optBeamVal   = optBeamPairIdxScalarTrain(shuffledIdx);
 optBeamVal   = optBeamVal(1:valDataLen);          % validation labels
 
-%% ── 3. NORMALISE → RESHAPE → DOWNSAMPLE (identical to baseline) ─────────
+%% ─ 3. NORMALISE → RESHAPE → DOWNSAMPLE (identical to baseline) ─────────
 numBeamPairs    = prm.NumRxBeams * prm.NumTxBeams;   % 70
 numSampledBeams = 14;
 downsampleStep  = round(numBeamPairs / numSampledBeams);
@@ -87,7 +87,7 @@ for i = 1:numVal
     oneHotVal(optBeamVal(i), i) = 1;
 end
 
-%% ── 4. BUILD DUAL-OUTPUT NETWORK ─────────────────────────────────────────
+%% ─ 4. BUILD DUAL-OUTPUT NETWORK ─────────────────────────────────────────
 % Using layerGraph to create branching architecture
 
 lgraph = layerGraph();
@@ -127,7 +127,7 @@ lgraph = connectLayers(lgraph, "shared_relu3", "cls_fc1");
 dualNet = dlnetwork(lgraph);
 disp("Dual-Output NN architecture built successfully.")
 
-%% ── 5. CUSTOM TRAINING LOOP ──────────────────────────────────────────────
+%% ─ 5. CUSTOM TRAINING LOOP ──────────────────────────────────────────────
 % alpha controls the balance between regression and classification loss
 % alpha = 0.5 means equal weight to both losses
 alpha = 0.5;
@@ -209,7 +209,7 @@ dualNet = bestDualNet;
 save("method2_dualOutputNN.mat", "dualNet", "bestValLoss")
 disp("Dual-Output NN model saved.")
 
-%% ── 6. EVALUATE: TOP-K ACCURACY ─────────────────────────────────────────
+%% ─ 6. EVALUATE: TOP-K ACCURACY ─────────────────────────────────────────
 % For evaluation we use the REGRESSION head output (70 RSRP predictions)
 % and also test using CLASSIFICATION head output (70 beam probabilities)
 % We report whichever performs better
@@ -260,7 +260,7 @@ for k = [1 3 5 10 18]
     fprintf("%-6d %-20.4f %-20.4f\n", k, accReg(k), accCls(k))
 end
 
-%% ── 7. EVALUATE: AVERAGE RSRP ───────────────────────────────────────────
+%% ─ 7. EVALUATE: AVERAGE RSRP ───────────────────────────────────────────
 rng(111)
 rsrpReg     = zeros(1,K);
 rsrpCls     = zeros(1,K);
@@ -293,7 +293,7 @@ fprintf("Avg RSRP Regression K=10: %.4f dBm\n", rsrpReg(10))
 fprintf("Avg RSRP Classif.   K=10: %.4f dBm\n", rsrpCls(10))
 fprintf("Avg RSRP Optimal    K=1:  %.4f dBm\n", rsrpOptimal(1))
 
-%% ── 8. COMPARISON PLOTS ─────────────────────────────────────────────────
+%% ─ 8. COMPARISON PLOTS ─────────────────────────────────────────────────
 if exist("accNeural","var") && exist("rsrpNeural","var")
 
     % Use classification head for comparison (directly optimized for beam)
